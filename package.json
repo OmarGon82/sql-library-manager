@@ -1,0 +1,25 @@
+{
+  "name": "sql-library-manager",
+  "version": "1.0.0",
+  "description": "An app that manages a libraries collection of books",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmarGon82/sql-library-manager.git"
+  },
+  "author": "Omar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OmarGon82/sql-library-manager/issues"
+  },
+  "homepage": "https://github.com/OmarGon82/sql-library-manager#readme",
+  "dependencies": {
+    "sequelize": "^5.21.3",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.1.1"
+  }
+}

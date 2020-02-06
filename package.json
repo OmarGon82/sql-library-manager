@@ -1,23 +1,18 @@
 {
-  "name": "sql-library-manager",
-  "version": "1.0.0",
-  "description": "An app that manages a libraries collection of books",
-  "main": "app.js",
+  "name": "project-8",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OmarGon82/sql-library-manager.git"
-  },
-  "author": "Omar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/OmarGon82/sql-library-manager/issues"
-  },
-  "homepage": "https://github.com/OmarGon82/sql-library-manager#readme",
   "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "pug": "^2.0.4",
     "sequelize": "^5.21.3",
     "sequelize-cli": "^5.5.1",
     "sqlite3": "^4.1.1"

@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h2= book.title
+  include by_line
+  a(href="../") &larr; Back 
+  | | 
+  a(href="/books/" + book.id + "/edit") Edit Book 
+  | | 
+  a(href="/books/" + book.id + "/delete") Delete Book

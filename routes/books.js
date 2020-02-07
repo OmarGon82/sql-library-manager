@@ -15,13 +15,13 @@ function handleAsync(cb) {
 
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
-    const books = await Book.findAll({ order: [["createdAt", "DESC"]]})
-    res.render("books/index", { books, title: "Sequelize-It!" });
+    const books = await Book.findAll({ order: [["title", "ASC"]]})
+    res.render("books/index", { books, title: "Library App" });
 }));
 
 /* Create a new book form. */
 router.get('/new', (req, res) => {
-    res.render("books/new", { book: {}, title: "New Book" });
+    res.render("books/new-book", { book: {}, title: "New Book" });
 });
 
 /* POST create Book entry. */ 
@@ -40,11 +40,11 @@ router.post('/', handleAsync(async (req, res) => {
     }
 }));
 
-/* Edit article form. */
-router.get("/:id/edit", handleAsync(async(req, res) => {
+/* Edit book form. */
+router.get("/:id/update-book", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
-        res.render("books/edit", { book, title: "Edit Book Entry"});
+        res.render("books/update-book", { book, title: "Update Book Entry"});
     } else {
         res.sendStatus(404)
     }
@@ -62,7 +62,7 @@ router.get("/:id", handleAsync(async(req, res) => {
 }));
 
 /* Update a book entry */
-router.get("/:id/edit", handleAsync(async(req, res) => {
+router.get("/:id/update-book", handleAsync(async(req, res) => {
     let book;
     try {
         book = await Book.findByPk(req.params.id);
@@ -76,7 +76,7 @@ router.get("/:id/edit", handleAsync(async(req, res) => {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
             book.id = req.params.id
-            res.render("books/edit", { book, errors: error.errors, title: "Edit Books"});
+            res.render("books/update-book", { book, errors: error.errors, title: "Update Books"});
         }else {
             throw error;
         }

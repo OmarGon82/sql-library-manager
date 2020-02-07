@@ -1,12 +1,18 @@
 extends ../layout
 
 block content
-  div.subheader
-    h2 Books
-    a(href="/books/new", class="btn-new") Create Book &#43;
-    
-  each book in books
-    book
-      h3= book.title
-      include by_line
-      a(href = "/books/" + book.id) Read More &rarr;
+  p
+    a(href="/books/newBook", class="button") Create a New Book
+  table
+    tr   
+      th Title
+      th Author
+      th Genre
+      th Year
+    each book in books 
+      tr 
+        td
+          a(href = "/books/" + book.id) #{book.title}
+        td= book.author
+        td= book.genre
+        td= book.year

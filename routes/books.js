@@ -19,7 +19,7 @@ router.get('/', handleAsync(async (req, res) => {
     res.render("books/index", { books, title: "Library App" });
 }));
 
-/* Create a new book form. */
+/* Get a new book form. */
 router.get('/new', (req, res) => {
     res.render("books/new-book", { book: {}, title: "New Book" });
 });
@@ -33,7 +33,7 @@ router.post('/', handleAsync(async (req, res) => {
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
-            res.render("books/new", { book, errors: error.errors, title: "New Book" })
+            res.render("books/new-book", { book, errors: error.errors, title: "New Book" })
         } else {
             throw error;
         }
@@ -59,7 +59,7 @@ router.post("/:id", handleAsync(async(req, res) => {
          await book.update(req.body)
          res.redirect("/books/" + book.id);
         } else {
-            res.sendStatus(404)
+            res.render("books/page-not-found");
         }
     } catch (error) {
         if( error.name === "SequelizeValidationError") {

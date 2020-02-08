@@ -13,14 +13,14 @@ block content
         label(for="author") Author:
         input(type="text", name="author" value=book.author)
       p
-        label(for="author") Genre:
+        label(for="Genre") Genre:
         input(type="text", name="genre" value=book.genre)
       p
-        label(for="author") Year:
+        label(for="Year") Year:
         input(type="text", name="year" value=book.year)
       p
-      input( type="submit" value="Update Book" )
+      input( type="submit" value="Update Book")
       p
-        a(class="button" href="../")  Cancel
+        a(class="button" href="../")  Cancel / Go back
       p
         a(class="button" href="/books/" + book.id + "/delete") Delete Book

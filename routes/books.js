@@ -20,49 +20,38 @@ router.get('/', handleAsync(async (req, res) => {
 }));
 
 /* Create a new book form. */
-router.get('/new-book', (req, res) => {
+router.get('/new', (req, res) => {
     res.render("books/new-book", { book: {}, title: "New Book" });
 });
 
-/* POST create Book entry. */ 
+/* POST new Book entry. */ 
 router.post('/', handleAsync(async (req, res) => {
     let book;
     try {
         book = await Book.create(req.body);
-        res.redirect("/books");
+        res.redirect("/books/" + book.id);
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
-            res.render("books/new-book", { book, errors: error.errors, title: "New Book" })
+            res.render("books/new", { book, errors: error.errors, title: "New Book" })
         } else {
             throw error;
         }
     }
 }));
 
-/* Edit book form. */
-router.get("/:id/update-book", handleAsync(async(req, res) => {
+/* Upddate book form */
+router.get("/:id", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
         res.render("books/update-book", { book, title: "Update Book"});
     } else {
-        res.sendStatus(404)
-    }
-}));
-
-
-/*Get a single Book */
-router.get("/:id", handleAsync(async(req, res) => {
-    const book = await Book.findByPk(req.params.id)
-    if(book) {
-        res.render("books/update-book", { book, title: book.title});
-    } else {
-        res.sendStatus(404);
+        res.render("books/page-not-found");
     }
 }));
 
 /* Update a book entry */
-router.post("/:id/update-book", handleAsync(async(req, res) => {
+router.post("/:id", handleAsync(async(req, res) => {
     let book;
     try {
         book = await Book.findByPk(req.params.id);
@@ -89,18 +78,18 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
     if(book) {
         res.render("books/delete",{ book, title: "Delete Book"});
     }else {
-        res.sendStatus(404);
+        res.render("books/page-not-found");
     }
 }))
 
-/*Delete a single book */
+/*Delete a book entry */
 router.post("/:id/delete", handleAsync( async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
         await book.destroy();
         res.redirect("/books")
     } else {
-        res.sendStatus(404)
+        res.render("books/page-not-found");
     }
 }));
 

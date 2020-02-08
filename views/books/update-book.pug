@@ -5,7 +5,7 @@ block content
   h1= title
 
   include errors
-  form(action="/books/" + book.id + "/update-book", method="post")
+  form(action="/books/" + book.id, method="post")
       p
         label(for="title") Title:
         input(type="text", name="title" value=book.title)

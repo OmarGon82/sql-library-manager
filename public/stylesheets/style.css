@@ -1,8 +1,14 @@
 body {
   padding: 10px 50px 50px;
   font: 18px "Garamond", serif;
+  background-image: url('../images/pile-of-books.jpg');
+    /* Full height */
+    height: 100%;
+    /* Center and scale the image */
+    background-position: center;
+    background-repeat: no-repeat;
+ 
 }
-
 a {
   color: #019875;
   text-decoration: none;

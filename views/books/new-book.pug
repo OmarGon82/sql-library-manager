@@ -6,4 +6,19 @@ block content
   include errors
   
   form(action="/books", method="post")
-    include form
+      p
+        label(for="title") Title:
+        input(type="text", name="title" )
+      p
+        label(for="author") Author:
+        input(type="text", name="author" )
+      p
+        label(for="author") Genre:
+        input(type="text", name="genre" )
+      p
+        label(for="author") Year:
+        input(type="text", name="year" )
+      p
+        input( type="submit" value="Create New Book" )
+      p
+        a(class="button" href="../")  Cancel

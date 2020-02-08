@@ -1,9 +1,0 @@
-extends ../layout
-
-block content
-  h2= book.title
-  a(href="../") &larr; Back 
-  | | 
-  a(href="/books/" + book.id + "/update-book") Update Book 
-  | | 
-  a(href="/books/" + book.id + "/delete") Delete Book

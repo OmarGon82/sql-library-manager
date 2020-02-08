@@ -7,6 +7,6 @@ block content
     em= book.title
     | ?
   form(action="/books/" + book.id + "/delete", method="post")
-    a(href="/books/" + book.id) No! Take me back! 
+    a(href="/books/" + book.id + "/update-book") No! Take me back! 
     | 
     input(type="submit", value = "Yes, I'm sure")

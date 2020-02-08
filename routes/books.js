@@ -44,7 +44,7 @@ router.post('/', handleAsync(async (req, res) => {
 router.get("/:id/update-book", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
-        res.render("books/update-book", { book, title: "Update Book Entry"});
+        res.render("books/update-book", { book, title: "Update Book"});
     } else {
         res.sendStatus(404)
     }
@@ -55,17 +55,18 @@ router.get("/:id/update-book", handleAsync(async(req, res) => {
 router.get("/:id", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id)
     if(book) {
-        res.render("books/show", { book, title: book.title});
+        res.render("books/update-book", { book, title: book.title});
     } else {
         res.sendStatus(404);
     }
 }));
 
 /* Update a book entry */
-router.get("/:id/update-book", handleAsync(async(req, res) => {
+router.post("/:id/update-book", handleAsync(async(req, res) => {
     let book;
     try {
         book = await Book.findByPk(req.params.id);
+           
         if(book) {
          await book.update(req.body)
          res.redirect("/books/" + book.id);
@@ -77,7 +78,7 @@ router.get("/:id/update-book", handleAsync(async(req, res) => {
             book = await Book.build(req.body);
             book.id = req.params.id
             res.render("books/update-book", { book, errors: error.errors, title: "Update Books"});
-        }else {
+        } else {
             throw error;
         }
     }

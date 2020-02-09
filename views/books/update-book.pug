@@ -22,5 +22,8 @@ block content
       input( type="submit" value="Update Book")
       p
         a(class="button" href="../")  Cancel / Go back
-      p
-        a(class="button" href="/books/" + book.id + "/delete") Delete Book
+  include delete
+      //- p
+      //-   a(class="button" href="/books/" + book.id + "/delete") Delete Book
+      //-     script
+      //-       alert("hello")

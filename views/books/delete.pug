@@ -1,12 +1,4 @@
-extends ../layout
+form(action="/books/" + book.id + "/delete", method="post" onsubmit="return confirm('Do you really want to delete this book?');")
+  input(type="submit", value = "Delete Book")
 
-block content
-  h2= title
-  p 
-    | Are you sure you want to delete 
-    em= book.title
-    | ?
-  form(action="/books/" + book.id + "/delete", method="post")
-    a(href="/books/" + book.id + "/update-book") No! Take me back! 
-    | 
-    input(type="submit", value = "Yes, I'm sure")
+  

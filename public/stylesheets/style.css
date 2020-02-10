@@ -101,3 +101,14 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+.search-bar {
+  position: relative;
+  left: 400px;
+  top: 60px;
+}
+
+.search-button {
+  position: relative;
+  right: 130px;
+}

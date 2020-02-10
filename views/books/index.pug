@@ -1,6 +1,10 @@
 extends ../layout
 
 block content
+  div(class="search-bar")
+    form(action="books/search" )
+      input(type="search" name="term" placeholder="Search...")
+      input(type="submit", value="search", class="search-button")
   p
     a(href="/books/new", class="button") Create a New Book
   table

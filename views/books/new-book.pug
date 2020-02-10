@@ -5,19 +5,19 @@ block content
   
   include errors
   
-  form(action="/books", method="post")
+  form(action="/books/new", method="post")
       p
         label(for="title") Title:
-        input(type="text", name="title" )
+        input(type="text", name="title" id="title" )
       p
         label(for="author") Author:
-        input(type="text", name="author" )
+        input(type="text", name="author" id="author")
       p
-        label(for="author") Genre:
-        input(type="text", name="genre" )
+        label(for="genre") Genre:
+        input(type="text", name="genre" id="genre" )
       p
-        label(for="author") Year:
-        input(type="text", name="year" )
+        label(for="year") Year:
+        input(type="text", name="year" id="year" )
       p
         input( type="submit" value="Create New Book" )
       p

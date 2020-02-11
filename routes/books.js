@@ -9,6 +9,7 @@ function handleAsync(cb) {
         try{
             await cb(req, res, next)
         } catch(error) {
+            console.log("this is the error: ", {error})
             res.status(500).send(error);
         }
     }
@@ -24,6 +25,16 @@ router.get('/', handleAsync(async (req, res) => {
 router.get('/new', (req, res) => {
     res.render("books/new-book", { book: {}, title: "New Book" });
 });
+
+/* Search for Books */
+router.get('/search', handleAsync( async (req, res) => {
+    const term  = req.query.term;
+    // console.dir("this is the req query: ", error)
+    term = term.toLowerCase();
+    const book = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
+    res.render("books/index", { book })
+}))
+
 
 /* POST new Book entry. */ 
 router.post('/new', handleAsync(async (req, res) => {
@@ -41,15 +52,29 @@ router.post('/new', handleAsync(async (req, res) => {
     }
 }));
 
+
 /* Upddate book form */
 router.get("/:id", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
         res.render("books/update-book", { book, title: "Update Book"});
     } else {
-        res.render("books/page-not-found");
+        res.sendStatus(404, "book not found");
+
+
     }
 }));
+
+/* GET individual book. */
+router.get("/:id", handleAsync(async (req, res) => {
+    const book = await Book.findByPk(req.params.id);
+    if(book) {
+      res.render("books/update-book", { book, title: book.title });  
+    } else {
+      res.sendStatus(404)
+    }
+  })); 
+
 
 /* Update a book entry */
 router.post("/:id", handleAsync(async(req, res) => {
@@ -60,7 +85,7 @@ router.post("/:id", handleAsync(async(req, res) => {
          await book.update(req.body)
          res.redirect("/books/" + book.id);
         } else {
-            res.render("books/page-not-found");
+            res.sendStatus(404, "this is the second one");
         }
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
@@ -79,7 +104,7 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
     if(book) {
         res.render("books/delete",{ book, title: "Delete Book"});
     }else {
-        res.render("books/page-not-found");
+
     }
 }))
 
@@ -90,18 +115,11 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
         await book.destroy();
         res.redirect("/books")
     } else {
-        res.render("books/page-not-found");
+        res.sendStatus(404, "this is the delete book");
     }
 }));
 
 
-/* Search for Books */
-router.get('/search', handleAsync( async (req, res) => {
-    const term  = req.query.term;
-    console.dir("this is the req query: ", term)
-    term = term.toLowerCase();
-    const books = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
-    res.render("books/index", { books })
-}))
+
 
 module.exports = router;

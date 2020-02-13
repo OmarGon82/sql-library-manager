@@ -38,13 +38,15 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  // render the error page
+  // render the error page  
+  res.status(err.status || 500);
+
   if(err.status === 404) {
     console.log("this is the error: ", err)
     //if the error status is 404 then render the not found page
     res.render('books/page-not-found.pug')
   } else {
-    res.status(err.status || 500);
+    
     //if the error status if something else of 500 render the error page
     console.log("this is the error:" , err)
     res.render('error');

@@ -9,7 +9,6 @@ function handleAsync(cb) {
         try{
             await cb(req, res, next)
         } catch(error) {
-            // res.status(500).send(error)
             next(error)
         }
     }
@@ -56,34 +55,46 @@ router.post('/new', handleAsync(async (req, res) => {
 
 /* Upddate book form */
 router.get("/:id", handleAsync(async(req, res) => {
-    const book = await Book.findByPk(req.params.id);
-    if(book) {
-        res.render("books/update-book", { book, title: "Update Book"});
+    
+    if(isNaN(req.params.id)) {
+        throw error = {
+            status: 404,
+            message: "Sorry that book doesn't exist"
+        }
     } else {
-        // res.render('book/page-not-found');
-        // const err = new Error("It looks like somethings wrong");
-        // err.status = 505;
-        // res.locals.error = err;
-        // console.log(res.locals.error);
-        // res.render('error')
-        throw error = {}
+        const book = await Book.findByPk(req.params.id);
+        if(book) {
+            res.render("books/update-book", { book, title: "Update Book"});
+        } else {
+            throw error = {
+                status: 500,
+                message: "Sorry that book was not found"
+            }
+        }
     }
 }));
 
 /* GET individual book. */
 router.get("/:id", handleAsync(async (req, res) => {
-    const book = await Book.findByPk(req.params.id);
-    if(book) {
-      res.render("books/update-book", { book, title: book.title });  
+
+
+    if(isNaN(req.params.id)) {
+        throw error = {
+            status: 404,
+            message: "Sorry that book doesn't exist"
+        }
     } else {
-        // res.render('book/page-not-found');
-        // const err = new Error("It looks like somethings wrong");
-        // err.status = 505;
-        // res.locals.error = err;
-        // console.log(res.locals.error);
-        // res.render('error')
-        throw error = {}
+        const book = await Book.findByPk(req.params.id);
+        if(book) {
+            res.render("books/update-book", { book, title: book.title });  
+        } else {
+            throw error = {
+                status: 500,
+                message: "Sorry that book was not found"
+            }
+        }
     }
+    
   })); 
 
 
@@ -91,18 +102,22 @@ router.get("/:id", handleAsync(async (req, res) => {
 router.post("/:id", handleAsync(async(req, res) => {
     let book;
     try {
-        book = await Book.findByPk(req.params.id);
-        if(book) {  
-         await book.update(req.body)
-         res.redirect("/books/" + book.id);
+        
+        if(isNaN(req.params.id)) {
+            throw error = {
+                status: 404,
+                message: "Sorry that book doesn't exist"
+            }  
         } else {
-            // res.render('book/page-not-found');
-            // const err = new Error("It looks like somethings wrong");
-            // err.status = 505;
-            // res.locals.error = err;
-            // console.log(res.locals.error);
-            // res.render('error')
-            throw error = {}
+            book = await Book.findByPk(req.params.id);
+            if(book) {
+                await book.update(req.body)
+                res.redirect("/books/" + book.id); 
+            }
+            throw error = {
+                status: 500,
+                message: "Sorry that book doesn't exist"
+            }
         }
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
@@ -117,34 +132,46 @@ router.post("/:id", handleAsync(async(req, res) => {
 
 /*Delete book form */
 router.get("/:id/delete", handleAsync(async(req, res) => {
-    const book = await Book.findByPk(req.params.id);
-    if(book) {
-        res.render("books/delete",{ book, title: "Delete Book"});
+  
+    if(isNaN(req.params.id)) {
+        throw error = {
+            status: 404,
+            message: "Sorry that book doesn't exist"
+        }  
     }else {
-        // // res.render('book/page-not-found');
-        // const err = new Error("It looks like somethings wrong");
-        // err.status = 505;
-        // res.locals.error = err;
-        // console.log(res.locals.error);
-        // res.render('error')
-        throw error = {}
+        const book = await Book.findByPk(req.params.id);
+        if(book) {
+            res.render("books/delete",{ book, title: "Delete Book"});
+        }else {
+            throw error = {   
+                status: 500,
+                message: "Sorry that book doesn't exist"
+            }
+                
+        }
     }
 }))
 
 /*Delete a book entry */
 router.post("/:id/delete", handleAsync( async (req, res) => {
-    const book = await Book.findByPk(req.params.id);
-    if(book) {
-        await book.destroy();
-        res.redirect("/books")
+  
+    if(isNaN(req.params.id)) {
+        throw error = {
+            status: 404,
+            message: "Sorry that book doesn't exist"
+        } 
+
     } else {
-        // res.render('book/page-not-found');
-        // const err = new Error("It looks like somethings wrong");
-        // err.status = 505;
-        // res.locals.error = err;
-        // console.log(res.locals.error);
-        // res.render('error')
-        throw error = {}
+        const book = await Book.findByPk(req.params.id);
+        if(book) {
+            await book.destroy();
+            res.redirect("/books")
+        } else {
+            throw error = {
+                status: 500,
+                message: "Sorry that book doesn't exist"
+            }   
+        }
     }
 }));
 

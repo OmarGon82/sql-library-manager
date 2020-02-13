@@ -20,19 +20,19 @@ router.get('/', handleAsync(async (req, res) => {
     res.render("books/index", { books, title: "Library App" });
 }));
 
+/* Search for Books */
+router.get('/search', handleAsync( async (req, res) => {
+    let {term}  = req.query;
+    term = term.toLowerCase();
+    const books = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
+    res.render("books/index", { books });
+}));
+
 /* Get a new book form. */
 router.get('/new', (req, res) => {
     res.render("books/new-book", { book: {}, title: "New Book" });
 });
 
-/* Search for Books */
-router.get('/search', handleAsync( async (req, res) => {
-    const term  = req.query.term;
-    // console.dir("this is the req query: ", error)
-    term = term.toLowerCase();
-    const book = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
-    res.render("books/index", { book })
-}))
 
 
 /* POST new Book entry. */ 
@@ -52,13 +52,19 @@ router.post('/new', handleAsync(async (req, res) => {
 }));
 
 
+
 /* Upddate book form */
 router.get("/:id", handleAsync(async(req, res) => {
     const book = await Book.findByPk(req.params.id);
     if(book) {
         res.render("books/update-book", { book, title: "Update Book"});
     } else {
-        res.render('/books/page-not-found')
+        // res.render('book/page-not-found');
+        const err = new Error("It looks like somethings wrong");
+        err.status = 505;
+        res.locals.error = err;
+        console.log(res.locals.error);
+        res.render('error')
     }
 }));
 
@@ -68,9 +74,12 @@ router.get("/:id", handleAsync(async (req, res) => {
     if(book) {
       res.render("books/update-book", { book, title: book.title });  
     } else {
-    //   res.sendStatus(404)
-        res.render('/books/page-not-found')
-
+        // res.render('book/page-not-found');
+        const err = new Error("It looks like somethings wrong");
+        err.status = 505;
+        res.locals.error = err;
+        console.log(res.locals.error);
+        res.render('error')
     }
   })); 
 
@@ -84,8 +93,12 @@ router.post("/:id", handleAsync(async(req, res) => {
          await book.update(req.body)
          res.redirect("/books/" + book.id);
         } else {
-            res.render('/books/page-not-found')
-            // res.render("books/error");
+            // res.render('book/page-not-found');
+            const err = new Error("It looks like somethings wrong");
+            err.status = 505;
+            res.locals.error = err;
+            console.log(res.locals.error);
+            res.render('error')
         }
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
@@ -104,8 +117,12 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
     if(book) {
         res.render("books/delete",{ book, title: "Delete Book"});
     }else {
-        // res.sendStatus(404);
-        res.render('/books/page-not-found')
+        // // res.render('book/page-not-found');
+        const err = new Error("It looks like somethings wrong");
+        err.status = 505;
+        res.locals.error = err;
+        console.log(res.locals.error);
+        res.render('error')
     }
 }))
 
@@ -116,9 +133,12 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
         await book.destroy();
         res.redirect("/books")
     } else {
-        // res.sendStatus(404);
-        res.render('/books/page-not-found')
-      
+        // res.render('book/page-not-found');
+        const err = new Error("It looks like somethings wrong");
+        err.status = 505;
+        res.locals.error = err;
+        console.log(res.locals.error);
+        res.render('error')
     }
 }));
 

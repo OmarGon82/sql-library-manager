@@ -9,7 +9,8 @@ function handleAsync(cb) {
         try{
             await cb(req, res, next)
         } catch(error) {
-            res.status(500).send(error)
+            // res.status(500).send(error)
+            next(error)
         }
     }
 }
@@ -60,11 +61,12 @@ router.get("/:id", handleAsync(async(req, res) => {
         res.render("books/update-book", { book, title: "Update Book"});
     } else {
         // res.render('book/page-not-found');
-        const err = new Error("It looks like somethings wrong");
-        err.status = 505;
-        res.locals.error = err;
-        console.log(res.locals.error);
-        res.render('error')
+        // const err = new Error("It looks like somethings wrong");
+        // err.status = 505;
+        // res.locals.error = err;
+        // console.log(res.locals.error);
+        // res.render('error')
+        throw error = {}
     }
 }));
 
@@ -75,11 +77,12 @@ router.get("/:id", handleAsync(async (req, res) => {
       res.render("books/update-book", { book, title: book.title });  
     } else {
         // res.render('book/page-not-found');
-        const err = new Error("It looks like somethings wrong");
-        err.status = 505;
-        res.locals.error = err;
-        console.log(res.locals.error);
-        res.render('error')
+        // const err = new Error("It looks like somethings wrong");
+        // err.status = 505;
+        // res.locals.error = err;
+        // console.log(res.locals.error);
+        // res.render('error')
+        throw error = {}
     }
   })); 
 
@@ -94,11 +97,12 @@ router.post("/:id", handleAsync(async(req, res) => {
          res.redirect("/books/" + book.id);
         } else {
             // res.render('book/page-not-found');
-            const err = new Error("It looks like somethings wrong");
-            err.status = 505;
-            res.locals.error = err;
-            console.log(res.locals.error);
-            res.render('error')
+            // const err = new Error("It looks like somethings wrong");
+            // err.status = 505;
+            // res.locals.error = err;
+            // console.log(res.locals.error);
+            // res.render('error')
+            throw error = {}
         }
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
@@ -118,11 +122,12 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
         res.render("books/delete",{ book, title: "Delete Book"});
     }else {
         // // res.render('book/page-not-found');
-        const err = new Error("It looks like somethings wrong");
-        err.status = 505;
-        res.locals.error = err;
-        console.log(res.locals.error);
-        res.render('error')
+        // const err = new Error("It looks like somethings wrong");
+        // err.status = 505;
+        // res.locals.error = err;
+        // console.log(res.locals.error);
+        // res.render('error')
+        throw error = {}
     }
 }))
 
@@ -134,11 +139,12 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
         res.redirect("/books")
     } else {
         // res.render('book/page-not-found');
-        const err = new Error("It looks like somethings wrong");
-        err.status = 505;
-        res.locals.error = err;
-        console.log(res.locals.error);
-        res.render('error')
+        // const err = new Error("It looks like somethings wrong");
+        // err.status = 505;
+        // res.locals.error = err;
+        // console.log(res.locals.error);
+        // res.render('error')
+        throw error = {}
     }
 }));
 

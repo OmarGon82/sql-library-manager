@@ -2,16 +2,21 @@ extends ../layout
 
 block content
 
-      table
+  table
     tr   
       th Title
-    //-   th Author
-    //-   th Genre
-    //-   th Year
-    each book in books 
-      tr 
-        td
-          a(href = "/books/" + book.id) #{book.title}
-        //- td= book.author
-        //- td= book.genre
-        //- td= book.year
+      th Author
+      th Genre
+      th Year
+    each book in books
+      if books
+          tr 
+            td
+              a(href = "/books/" + book.id) #{book.title}
+            td= book.author
+            td= book.genre
+            td= book.year
+      else
+        p No search results
+  p
+  a(class="button" href="../")  Go back

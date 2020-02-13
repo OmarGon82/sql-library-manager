@@ -26,7 +26,7 @@ router.get('/search', handleAsync( async (req, res) => {
     let {term}  = req.query;
     term = term.toLowerCase();
     const books = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
-    res.render("books/index", { books });
+    res.render("books/searchResults", { books });
 }));
 
 /* Get a new book form. */

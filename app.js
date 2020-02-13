@@ -40,13 +40,11 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   // render the error page  
   res.status(err.status || 500);
-
   if(err.status === 404) {
     console.log("this is the error: ", err)
     //if the error status is 404 then render the not found page
     res.render('books/page-not-found.pug')
   } else {
-    
     //if the error status if something else of 500 render the error page
     console.log("this is the error:" , err)
     res.render('error');

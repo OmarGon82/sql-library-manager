@@ -41,12 +41,12 @@ app.use(function(err, req, res, next) {
   // render the error page  
   res.status(err.status || 500);
   if(err.status === 404) {
-    console.log("this is the error: ", err)
+    console.log("this is the 404 error: ", err)
     //if the error status is 404 then render the not found page
     res.render('books/page-not-found.pug')
   } else {
     //if the error status if something else of 500 render the error page
-    console.log("this is the error:" , err)
+    console.log("this is the 500 or something else error:" , err)
     res.render('error');
   }
 

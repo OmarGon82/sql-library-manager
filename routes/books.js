@@ -25,8 +25,27 @@ router.get('/', handleAsync(async (req, res) => {
 router.get('/search', handleAsync( async (req, res) => {
     let {term}  = req.query;
     term = term.toLowerCase();
-    const books = await Book.findAll({ where: { title: { [Op.like]: '%' + term + '%' } } })
-    res.render("books/searchResults", { books });
+
+    const books = await Book.findAll({ 
+        where: { 
+        [Op.or]:
+            {
+                title: {
+                    [Op.like]: '%' + term + '%'
+                },
+                author: {
+                    [Op.like]:'%' + term + '%'
+                },
+                genre: {
+                    [Op.like]: '%' + term + '%'
+                },
+                year: {
+                    [Op.like]: '%' + parseInt(term) + '%'
+                }  
+            }
+        } 
+    })
+    res.render("books/searchResults", { books , title: "Search results"});
 }));
 
 /* Get a new book form. */
@@ -54,7 +73,7 @@ router.post('/new', handleAsync(async (req, res) => {
 }));
 
 /**
- * Error validation is handled by checking if the book id is a number or not
+ * Error handling is done by checking if the book id is a number or not
  * If the book Id is not a number then throw a 404 error letting the user know that the book doesn't exist
  * in the Else block if the book exists then render it else throw 500 error
  */
@@ -80,25 +99,25 @@ router.get("/:id", handleAsync(async(req, res) => {
 }));
 
 /* GET individual book. */
-router.get("/:id", handleAsync(async (req, res) => {
-    if(isNaN(parseInt(req.params.id))) {
+// router.get("/:id", handleAsync(async (req, res) => {
+//     if(isNaN(parseInt(req.params.id))) {
 
-        throw error = {
-            status: 404,
-            message: "page not found"
-        }
-    } else {
-        const book = await Book.findByPk(req.params.id);
-        if(book) {
-            res.render("books/update-book", { book, title: book.title });  
-        } else {
-            throw error = {
-                status: 500,
-            }
-        }
-    }
+//         throw error = {
+//             status: 404,
+//             message: "page not found"
+//         }
+//     } else {
+//         const book = await Book.findByPk(req.params.id);
+//         if(book) {
+//             res.render("books/update-book", { book, title: book.title });  
+//         } else {
+//             throw error = {
+//                 status: 500,
+//             }
+//         }
+//     }
     
-  })); 
+//   })); 
 
 
 /* Update a book entry */
@@ -176,3 +195,5 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
 
 
 module.exports = router;
+
+

@@ -44,14 +44,20 @@ router.get('/search', handleAsync( async (req, res) => {
             }
         } 
     })
-    res.render("books/searchResults", { books , title: "Search results"});
+    if(books.length >= 1) {
+        res.render("books/searchResults", { books , title: "Search results"});
+    } else {
+        throw error = {
+            status: 404,
+            message: "Your search returned no results"
+        }
+    }
 }));
 
 /* Get a new book form. */
 router.get('/new', (req, res) => {
     res.render("books/new-book", { book: {}, title: "New Book" });
 });
-
 
 
 /* POST new Book entry. */ 
@@ -97,27 +103,6 @@ router.get("/:id", handleAsync(async(req, res) => {
     }
 }));
 
-/* GET individual book. */
-// router.get("/:id", handleAsync(async (req, res) => {
-//     if(isNaN(parseInt(req.params.id))) {
-
-//         throw error = {
-//             status: 404,
-//             message: "page not found"
-//         }
-//     } else {
-//         const book = await Book.findByPk(req.params.id);
-//         if(book) {
-//             res.render("books/update-book", { book, title: book.title });  
-//         } else {
-//             throw error = {
-//                 status: 500,
-//             }
-//         }
-//     }
-    
-//   })); 
-
 
 /* Update a book entry */
 router.post("/:id", handleAsync(async(req, res) => {
@@ -153,7 +138,6 @@ router.post("/:id", handleAsync(async(req, res) => {
 /*Delete book form */
 router.get("/:id/delete", handleAsync(async(req, res) => {
     if(isNaN(parseInt(req.params.id))) {
-        console.log(typeof id)
         throw error = {
             status: 404,
             message: "Sorry that book doesn't exist"
@@ -177,7 +161,6 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
             status: 404,
             message: "Sorry that book doesn't exist"
         } 
-
     } else {
         const book = await Book.findByPk(req.params.id);
         if(book) {

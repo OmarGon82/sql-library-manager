@@ -2,7 +2,7 @@ extends   ./layout
 
 block content
   body.error-background
-  h1= "oh no! something is wrong :("
+  h1= error.message
   h2= error.status
-  h3= error.message
   pre #{error.stack}
+   a(class="button" href="../")  Home

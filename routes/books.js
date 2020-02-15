@@ -15,6 +15,8 @@ function handleAsync(cb) {
     }
 }
 
+
+
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
     const books = await Book.findAll({ order: [["title", "ASC"]]})
@@ -66,7 +68,7 @@ router.post('/new', handleAsync(async (req, res) => {
     let book;
     try {
         book = await Book.create(req.body);
-        res.redirect("/books/" + book.id);
+        res.redirect("/books");
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
@@ -84,7 +86,7 @@ router.post('/new', handleAsync(async (req, res) => {
  */
 
 /* Upddate book form */
-router.get("/:id", handleAsync(async(req, res) => {
+router.get("/:id/update", handleAsync(async(req, res) => {
     
     if(isNaN(parseInt(req.params.id))) {
         throw error = {
@@ -97,7 +99,8 @@ router.get("/:id", handleAsync(async(req, res) => {
             res.render("books/update-book", { book, title: "Update Book"});
         } else {
             throw error = {
-                status: 500
+                status: 500,
+                message: "Looks like the book your trying to update doesn't exist"
             }
         }
     }
@@ -105,7 +108,7 @@ router.get("/:id", handleAsync(async(req, res) => {
 
 
 /* Update a book entry */
-router.post("/:id", handleAsync(async(req, res) => {
+router.post("/:id/update", handleAsync(async(req, res) => {
     let book;
     try {
         
@@ -118,10 +121,11 @@ router.post("/:id", handleAsync(async(req, res) => {
             book = await Book.findByPk(req.params.id);
             if(book) {
                 await book.update(req.body)
-                res.redirect("/books/" + book.id); 
+                res.redirect("/books"); 
             }
             throw error = {
                 status: 500,
+                message: "Looks like the book your trying to update doesn't exist"
             }
         }
     } catch (error) {
@@ -140,7 +144,7 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
     if(isNaN(parseInt(req.params.id))) {
         throw error = {
             status: 404,
-            message: "Sorry that book doesn't exist"
+            message: "The book you are trying to delete may have already been deleted or doesn't exist" 
         }  
     }else {
         const book = await Book.findByPk(req.params.id);
@@ -148,7 +152,8 @@ router.get("/:id/delete", handleAsync(async(req, res) => {
             res.render("books/delete",{ book, title: "Delete Book"});
         }else {
             throw error = {   
-                status: 500, 
+                status: 500,
+                message: "The book you are trying to delete may have already been deleted or doesn't exist" 
             }
         }
     } 
@@ -169,7 +174,9 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
         } else {
             throw error = {
                 status: 500,
+                message: "The book you are trying to delete may have already been deleted or doesn't exist" 
             }   
+                
         }
     }
 }));

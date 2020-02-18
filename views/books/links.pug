@@ -1,0 +1,6 @@
+- let number = 1
+div(class="pagination")
+    ul
+        while number <= neededPages
+            li
+            a(href =`/books/test?page=${number}&limit=5`, class="button")= number++

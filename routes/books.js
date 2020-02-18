@@ -16,12 +16,51 @@ function handleAsync(cb) {
 }
 
 
+/* GET testing pagination */
+router.get('/page', handleAsync(async (req, res) => {
+    const page = req.query.page;
+    const limit = 5;
+    const startIndex = (page - 1) * limit
+    const endIndex = parseInt(page) * limit
+    
+    // console.log("this is the start index: ", startIndex)
+    // console.log("this is the eend index:", endIndex)
+    const books = await Book.findAndCountAll({ order: [["title", "ASC"]],limit:limit, offset:startIndex });
+    const neededPages = Math.ceil(books.count / limit)
+    // const results = {}
+    // if( endIndex < books.count) {
+    //     books.next = {
+    //         page: page +1,
+    //         limit: limit
+    //     }
+
+    // }
+
+    // if (startIndex > 0) {
+    //     books.previous = {
+    //         page: page - 1,
+    //         limit: limit
+    //     }
+    // }
+    
+    
+    // console.log("this is the book count: ",books.count)
+    const rows = books.rows
+    // results.results = books
+    // res.json(rows)
+    
+    res.render("books/index",  {rows, neededPages});
+    // res.render("books/index", {books})
+
+}));
+   
+
 
 /* GET books listing. */
-router.get('/', handleAsync(async (req, res) => {
-    const books = await Book.findAll({ order: [["title", "ASC"]]})
-    res.render("books/index", { books, title: "Library App" });
-}));
+// router.get('/', handleAsync(async (req, res) => {
+//     const books = await Book.findAll({ order: [["title", "ASC"]]})
+//     res.render("books/index", { books, title: "Library App" });
+// }));
 
 /* Search for Books */
 router.get('/search', handleAsync( async (req, res) => {
@@ -46,13 +85,14 @@ router.get('/search', handleAsync( async (req, res) => {
             }
         } 
     })
+
     if(books.length >= 1) {
         res.render("books/searchResults", { books , title: "Search results"});
     } else {
-        throw error = {
-            status: 404,
-            message: "Your search returned no results"
-        }
+            throw error = {
+                status: 404,
+                message: "Your search returned no results"
+            }
     }
 }));
 

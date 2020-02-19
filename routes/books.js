@@ -119,7 +119,7 @@ router.post('/new', handleAsync(async (req, res) => {
     let book;
     try {
         book = await Book.create(req.body);
-        res.redirect("/books");
+        res.redirect("/");
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
@@ -172,7 +172,7 @@ router.post("/:id/update", handleAsync(async(req, res) => {
             book = await Book.findByPk(req.params.id);
             if(book) {
                 await book.update(req.body)
-                res.redirect("/books"); 
+                res.redirect("/"); 
             }
             throw error = {
                 status: 500,
@@ -221,7 +221,7 @@ router.post("/:id/delete", handleAsync( async (req, res) => {
         const book = await Book.findByPk(req.params.id);
         if(book) {
             await book.destroy();
-            res.redirect("/books")
+            res.redirect("/")
         } else {
             throw error = {
                 status: 500,

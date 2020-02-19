@@ -17,16 +17,16 @@ function handleAsync(cb) {
 
 
 /* GET testing pagination */
-router.get("/", handleAsync(async (req, res) => {
-    const page = req.query.page;
-    const limit = 5;
-    const startIndex = (page - 1) * limit
-    const endIndex = parseInt(page) * limit
+// router.get("/:page", handleAsync(async (req, res) => {
+//     const page = req.query.page;
+//     const limit = 5;
+//     const startIndex = (page - 1) * limit
+//     const endIndex = parseInt(page) * limit
     
-    console.log("this is the start index: ", startIndex)
-    console.log("this is the eend index:", endIndex)
-    const books = await Book.findAndCountAll({ order: [["title", "ASC"]],limit:limit, offset:startIndex });
-    const neededPages = Math.ceil(books.count / limit)
+    // console.log("this is the start index: ", startIndex)
+    // console.log("this is the eend index:", endIndex)
+    // const books = await Book.findAndCountAll({ order: [["title", "ASC"]],limit:limit, offset:startIndex });
+    // const neededPages = Math.ceil(books.count / limit)
     // const results = {}
     // if( endIndex < books.count) {
     //     books.next = {
@@ -50,9 +50,9 @@ router.get("/", handleAsync(async (req, res) => {
     // res.json(rows)
     
     // res.render("books/index",  {rows, neededPages});
-    res.render("books/index", {books, neededPages })
+//     res.render("books/index", {books, neededPages })
 
-}));
+// }));
    
 
 
@@ -63,31 +63,30 @@ router.get('/', handleAsync(async (req, res) => {
 }));
 
 /* Search for Books */
-router.get('/search', handleAsync( async (req, res) => {
-    let {term}  = req.query;
-    term = term.toLowerCase();
+router.post('/', handleAsync( async (req, res) => {
+    const term   = req.body;    
     const books = await Book.findAll({ 
     where: { 
     [Op.or]:
             {
                 title: {
-                    [Op.like]: '%' + term + '%'
+                    [Op.like]:`%${term.term.toLowerCase()}%`
                 },
                 author: {
-                    [Op.like]:'%' + term + '%'
+                    [Op.like]:`%${term.term.toLowerCase()}%`
                 },
                 genre: {
-                    [Op.like]: '%' + term + '%'
+                    [Op.like]: `%${term.term.toLowerCase()}%`
                 },
                 year: {
-                    [Op.like]: '%' + parseInt(term) + '%'
+                    [Op.like]: `%${term.term.toLowerCase()}%`
                 }  
             }
         } 
     })
 
     if(books.length >= 1) {
-        res.render("books/searchResults", { books , title: "Search results"});
+        res.render("books/index", { books , title: "Search results"});
     } else {
             throw error = {
                 status: 404,

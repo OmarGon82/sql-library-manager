@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   div(class="search-bar")
-    form(action="books/search" )
+    form(action="/books", method="post" )
       input(type="search" name="term" placeholder="Search...")
       input(type="submit", value="search", class="search-button")
   p
@@ -13,7 +13,7 @@ block content
       th Author
       th Genre
       th Year
-    each book in books.rows
+    each book in books
       tr 
         td
           a(href = "/books/" + book.id + "/update") #{book.title}

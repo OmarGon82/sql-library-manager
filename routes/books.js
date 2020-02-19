@@ -58,35 +58,47 @@ function handleAsync(cb) {
 
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
-    const books = await Book.findAll({ order: [["title", "ASC"]]})
-    res.render("books/index", { books, title: "Library App" });
+    let page = req.query.page;
+    const limit = 5;
+    const startIndex = (page - 1) * limit
+    const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
+    const neededPages = Math.ceil(books.count / limit)
+    
+    res.render("books/index", { books, neededPages, title: "Library App" });
+    
 }));
 
 /* Search for Books */
 router.post('/', handleAsync( async (req, res) => {
-    const term   = req.body;    
-    const books = await Book.findAll({ 
+    let term = req.body;
+    //console.log(term)
+    term.term  = term.term.toLowerCase()
+    // console.log(term.term.toLowerCase())
+    // console.log("this is the term: ", term.term)    
+    const books = await Book.findAndCountAll({ 
     where: { 
     [Op.or]:
             {
                 title: {
-                    [Op.like]:`%${term.term.toLowerCase()}%`
+                    [Op.like]: `%${term.term}%`
                 },
                 author: {
-                    [Op.like]:`%${term.term.toLowerCase()}%`
+                    [Op.like]:`%${term.term}%`
                 },
                 genre: {
-                    [Op.like]: `%${term.term.toLowerCase()}%`
+                    [Op.like]: `%${term.term}%`
                 },
                 year: {
-                    [Op.like]: `%${term.term.toLowerCase()}%`
+                    [Op.like]: `%${term.term}%`
                 }  
             }
         } 
     })
-
-    if(books.length >= 1) {
-        res.render("books/index", { books , title: "Search results"});
+    const limit = 5;
+    const neededPages = Math.ceil(books.count / limit)
+    console.log("length of the books: " , books.count)
+    if(books.count > 0) {
+        res.render("books/index", { books, neededPages, title: "Search results"});
     } else {
             throw error = {
                 status: 404,

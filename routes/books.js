@@ -3,6 +3,7 @@ const router = express.Router();
 const Book = require('../models').Book;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+var request = require('request')
 
 function handleAsync(cb) {
     return async(req, res, next) => {
@@ -15,66 +16,31 @@ function handleAsync(cb) {
     }
 }
 
-
-/* GET testing pagination */
-// router.get("/:page", handleAsync(async (req, res) => {
-//     const page = req.query.page;
-//     const limit = 5;
-//     const startIndex = (page - 1) * limit
-//     const endIndex = parseInt(page) * limit
-    
-    // console.log("this is the start index: ", startIndex)
-    // console.log("this is the eend index:", endIndex)
-    // const books = await Book.findAndCountAll({ order: [["title", "ASC"]],limit:limit, offset:startIndex });
-    // const neededPages = Math.ceil(books.count / limit)
-    // const results = {}
-    // if( endIndex < books.count) {
-    //     books.next = {
-    //         page: page +1,
-    //         limit: limit
-    //     }
-
-    // }
-
-    // if (startIndex > 0) {
-    //     books.previous = {
-    //         page: page - 1,
-    //         limit: limit
-    //     }
-    // }
-    
-    
-    // console.log("this is the book count: ",books.count)
-    // const rows = books.rows
-    // results.results = books
-    // res.json(rows)
-    
-    // res.render("books/index",  {rows, neededPages});
-//     res.render("books/index", {books, neededPages })
-
-// }));
-   
-
-
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
     let page = req.query.page;
+    let query = req.query.term
     const limit = 5;
     const startIndex = (page - 1) * limit
     const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
     const neededPages = Math.ceil(books.count / limit)
-    
-    res.render("books/index", { books, neededPages, title: "Library App" });
+    console.log("this is the query in the get route: ", query)
+    if(query) {
+        console.log("this is the term in GET : ", query)
+        //I don't know how to render the right page here
+        res.render("books/index", { books, neededPages, query, title: "Search results"}) 
+
+    } else {
+
+        res.render("books/index", { books, neededPages, title: "Library App" });
+    }
     
 }));
 
 /* Search for Books */
 router.post('/', handleAsync( async (req, res) => {
     let term = req.body;
-    //console.log(term)
     term.term  = term.term.toLowerCase()
-    // console.log(term.term.toLowerCase())
-    // console.log("this is the term: ", term.term)    
     const books = await Book.findAndCountAll({ 
     where: { 
     [Op.or]:
@@ -94,11 +60,12 @@ router.post('/', handleAsync( async (req, res) => {
             }
         } 
     })
+    const query = term.term
     const limit = 5;
     const neededPages = Math.ceil(books.count / limit)
-    console.log("length of the books: " , books.count)
-    if(books.count > 0) {
-        res.render("books/index", { books, neededPages, title: "Search results"});
+    if(books.count > 0) {  
+        console.log("this is the query in the search route: ", query)
+        res.render("books/index", { books, neededPages, query, title: "Search results"});
     } else {
             throw error = {
                 status: 404,

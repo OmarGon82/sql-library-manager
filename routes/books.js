@@ -22,13 +22,12 @@ function handleAsync(cb) {
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
     let page = req.query.page;
-    let term = req.query.term
+    let query = req.query.term
     const limit = 5;
     const startIndex = (page - 1) * limit
-    // const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
+    const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
     
-    if (!term) {
-
+    if (!query) {
           const books = await Book.findAndCountAll({
             order: [['title', 'ASC']],
             limit: limit,
@@ -36,35 +35,34 @@ router.get('/', handleAsync(async (req, res) => {
           });
           const neededPages = Math.ceil(books.count / limit);
           res.render('books/index', { books, neededPages, title: 'Library App' });
-      } else {
-        const neededPages = Math.ceil(books.count / limit)
+      } else {  
         const books = await Book.findAndCountAll({
             limit: limit,
             offset: startIndex,
             where: {
               [Op.or]: {
                 title: {
-                  [Op.like]: `%${term}%`
+                  [Op.like]: `%${query}%`
                 },
                 author: {
-                  [Op.like]: `%${term}%`
+                  [Op.like]: `%${query}%`
                 },
                 genre: {
-                  [Op.like]: `%${term}%`
+                  [Op.like]: `%${query}%`
                 },
                 year: {
-                  [Op.like]: `%${term}%`
+                  [Op.like]: `%${query}%`
                 }
               }
             }
         });
-        // res.render('books/index', { books, neededPages, title: 'Search Results'})
-    
+        console.log("there are this many results: ", books.count)
+        const neededPages = Math.ceil(books.count / limit)
+        res.render('books/index', { books, neededPages, query , title: 'Search Results'})
     }
 }));
 
 /* Search for Books */
-
 router.post('/', handleAsync( async (req, res) => {
     let term = req.body;
     term.term  = term.term.toLowerCase()

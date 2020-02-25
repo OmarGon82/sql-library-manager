@@ -28,8 +28,26 @@ module.exports = (sequelize) => {
                 }
             }
         },
-        genre: Sequelize.STRING,
-        year: Sequelize.INTEGER
+        genre: {
+            type: Sequelize.STRING,
+            validate: {
+                notEmpty: {
+                    msg: '"Genre" is required'
+                }
+            }
+        },
+        year: {
+            type: Sequelize.INTEGER,
+            isNumeric: true, //year input must be a number
+            validate: {
+                notEmpty: {
+                    msg: '"Year" is required'
+                },
+                isNumeric: {
+                    msg:'"Year" must be a number' 
+                }
+            }
+        } 
     },  { sequelize });
 
     return Book;

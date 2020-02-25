@@ -4,7 +4,10 @@ const Book = require('../models').Book;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-
+/**
+ * This middleware wraps each route in a try catch block.
+ * @param {callback funtion} cb 
+ */
 function handleAsync(cb) {
     return async(req, res, next) => {
         try{
@@ -61,6 +64,7 @@ router.get('/', handleAsync(async (req, res) => {
 }));
 
 /* Search for Books */
+
 router.post('/', handleAsync( async (req, res) => {
     let term = req.body;
     term.term  = term.term.toLowerCase()
@@ -87,7 +91,8 @@ router.post('/', handleAsync( async (req, res) => {
     const limit = 5;
     const neededPages = Math.ceil(books.count / limit)
     if(books.count > 0) {  
-        console.log("this is the query in the search route: ", query)
+        // console.log("this is the query in the search route: ", query)
+        //passing in the query from the post route so it can be used in the main GET route
         res.render("books/index", { books, neededPages, query, title: "Search results"});
     } else {
             throw error = {
@@ -112,7 +117,6 @@ router.post('/new', handleAsync(async (req, res) => {
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
-            book.id = req.params.id
             res.render("books/new-book", { book, errors: error.errors, title: "New Book" })
         } else {
             throw error 
@@ -123,7 +127,7 @@ router.post('/new', handleAsync(async (req, res) => {
 
 /**
  * Error handling is done by checking if the book id is a number or not
- * If the book Id is not a number then throw a 404 error letting the user know that the book doesn't exist
+ * if the book Id is not a number then throw a 404 error letting the user know that the book doesn't exist
  * in the Else block if the book exists then render it else throw 500 error
  */
 

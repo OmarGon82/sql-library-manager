@@ -3,9 +3,7 @@ var router = express.Router();
 const url = require('url')
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  
-
-  // res.redirect("/books");
+  //construct the exacth path for the home route.Giving it a query
   res.redirect(url.format({
     pathname:"/books",
     query: {

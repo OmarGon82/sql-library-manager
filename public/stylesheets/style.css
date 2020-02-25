@@ -1,13 +1,11 @@
 body {
-  /* padding: 10px 50px 50px; */
+  padding: 10px 50px 50px;
   font: 18px "Garamond", serif;
-  width: 100%;
+  /* width: 100%;  */
   background-image: url('../images/pile-of-books.jpg');
-    /* Full height */
-    /* height: 100%; */
-    /* Center and scale the image */
-    /* background-position: center; */
-    background-repeat: no-repeat;
+  /* Center and scale the image */
+  background-position: center;
+  background-repeat: no-repeat;
 
 }
 a {
@@ -104,9 +102,9 @@ input[type=text] {
 }
 
 .search-bar {
-  position: relative;
-  left: 300px;
-  top: 50px;
+  position: absolute;
+  left: 380px;
+  top: 100px;
 }
 
 .search-button {
@@ -116,6 +114,7 @@ input[type=text] {
 
 .error-background {
   background-image: url('../images/booksBackground.jpg');
+  width: 100%;
   color: white;
 }
 

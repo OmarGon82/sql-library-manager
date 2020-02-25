@@ -38,7 +38,7 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  // render the error page  
+  // sets the status of the response
   res.status(err.status || 500);
   if(err.status === 404) {
     console.log("this is the 404 error: ", err)

@@ -25,8 +25,6 @@ router.get('/', handleAsync(async (req, res) => {
     let query = req.query.term
     const limit = 5;
     const startIndex = (page - 1) * limit
-    const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
-    
     if (!query) {
           const books = await Book.findAndCountAll({
             order: [['title', 'ASC']],
@@ -34,9 +32,10 @@ router.get('/', handleAsync(async (req, res) => {
             offset: startIndex
           });
           const neededPages = Math.ceil(books.count / limit);
-          res.render('books/index', { books, neededPages, title: 'Library App' });
+          res.render('books/index', { books, neededPages, page,  title: 'Library App' });
       } else {  
         const books = await Book.findAndCountAll({
+            order: [['title', 'ASC']],
             limit: limit,
             offset: startIndex,
             where: {
@@ -56,7 +55,6 @@ router.get('/', handleAsync(async (req, res) => {
               }
             }
         });
-        console.log("there are this many results: ", books.count)
         const neededPages = Math.ceil(books.count / limit)
         res.render('books/index', { books, neededPages, query , title: 'Search Results'})
     }
@@ -66,7 +64,13 @@ router.get('/', handleAsync(async (req, res) => {
 router.post('/', handleAsync( async (req, res) => {
     let term = req.body;
     term.term  = term.term.toLowerCase()
-    const books = await Book.findAndCountAll({ 
+    const limit = 5;
+    //thie intial search wills start at page one so I can I just do (1-1) * limit
+    const startIndex = ( 1 - 1) * limit
+    const books = await Book.findAndCountAll({
+    order: [['title', 'ASC']],
+    limit: limit,
+    offset: startIndex, 
     where: { 
     [Op.or]:
             {
@@ -86,10 +90,9 @@ router.post('/', handleAsync( async (req, res) => {
         } 
     })
     const query = term.term
-    const limit = 5;
+    
     const neededPages = Math.ceil(books.count / limit)
     if(books.count > 0) {  
-        // console.log("this is the query in the search route: ", query)
         //passing in the query from the post route so it can be used in the main GET route
         res.render("books/index", { books, neededPages, query, title: "Search results"});
     } else {

@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404,{ message: "Ooops, nothing to see here!"}));
+  next(createError(404, "Ooops, nothing to see here!" ));
 });
 
 // error handler

@@ -3,10 +3,13 @@ extends ../layout
 block content
   h1= title
 
-  form(action="/books/" + book.id + "/update" , method="post")
+  include inputErrors
+  
+  form(action="/books/" + book.id , method="post")
       p
         label(for="title") Title:
         input(type="text", name="title" id="title" value=book.title)
+  
       p
         label(for="author") Author:
         input(type="text", name="author" id="author" value=book.author)
@@ -16,8 +19,8 @@ block content
       p
         label(for="year") Year:
         input(type="text", name="year" id="year" value=book.year)
-      p
+        
       input( type="submit" value="Update Book")
       p
         a(class="button" href="/")  Cancel / Go back
-  include delete
+

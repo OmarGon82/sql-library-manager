@@ -3,7 +3,7 @@ const router = express.Router();
 const Book = require('../models').Book;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-var request = require('request')
+
 
 function handleAsync(cb) {
     return async(req, res, next) => {
@@ -11,7 +11,7 @@ function handleAsync(cb) {
             await cb(req, res, next)
         } catch(error) {
             //passes the error to global error handler
-            next(error)
+            next(error)   
         }
     }
 }
@@ -19,22 +19,45 @@ function handleAsync(cb) {
 /* GET books listing. */
 router.get('/', handleAsync(async (req, res) => {
     let page = req.query.page;
-    let query = req.query.term
+    let term = req.query.term
     const limit = 5;
     const startIndex = (page - 1) * limit
-    const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
-    const neededPages = Math.ceil(books.count / limit)
-    console.log("this is the query in the get route: ", query)
-    if(query) {
-        console.log("this is the term in GET : ", query)
-        //I don't know how to render the right page here
-        res.render("books/index", { books, neededPages, query, title: "Search results"}) 
-
-    } else {
-
-        res.render("books/index", { books, neededPages, title: "Library App" });
-    }
+    // const books = await Book.findAndCountAll({ order: [["title", "ASC"]], limit:limit, offset:startIndex });
     
+    if (!term) {
+
+          const books = await Book.findAndCountAll({
+            order: [['title', 'ASC']],
+            limit: limit,
+            offset: startIndex
+          });
+          const neededPages = Math.ceil(books.count / limit);
+          res.render('books/index', { books, neededPages, title: 'Library App' });
+      } else {
+        const neededPages = Math.ceil(books.count / limit)
+        const books = await Book.findAndCountAll({
+            limit: limit,
+            offset: startIndex,
+            where: {
+              [Op.or]: {
+                title: {
+                  [Op.like]: `%${term}%`
+                },
+                author: {
+                  [Op.like]: `%${term}%`
+                },
+                genre: {
+                  [Op.like]: `%${term}%`
+                },
+                year: {
+                  [Op.like]: `%${term}%`
+                }
+              }
+            }
+        });
+        // res.render('books/index', { books, neededPages, title: 'Search Results'})
+    
+    }
 }));
 
 /* Search for Books */
@@ -82,7 +105,6 @@ router.get('/new', (req, res) => {
 
 /* POST new Book entry. */ 
 router.post('/new', handleAsync(async (req, res) => {
-
     let book;
     try {
         book = await Book.create(req.body);
@@ -90,9 +112,11 @@ router.post('/new', handleAsync(async (req, res) => {
     } catch (error) {
         if( error.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
+            book.id = req.params.id
             res.render("books/new-book", { book, errors: error.errors, title: "New Book" })
         } else {
-            throw error;
+            throw error 
+
         }
     }
 }));
@@ -104,7 +128,7 @@ router.post('/new', handleAsync(async (req, res) => {
  */
 
 /* Upddate book form */
-router.get("/:id/update", handleAsync(async(req, res) => {
+router.get("/:id", handleAsync(async(req, res) => {
     
     if(isNaN(parseInt(req.params.id))) {
         throw error = {
@@ -126,7 +150,7 @@ router.get("/:id/update", handleAsync(async(req, res) => {
 
 
 /* Update a book entry */
-router.post("/:id/update", handleAsync(async(req, res) => {
+router.post("/:id", handleAsync(async(req, res) => {
     let book;
     try {
         

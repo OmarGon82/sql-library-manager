@@ -130,12 +130,19 @@ input[type=text] {
   .pagination li{
     display: inline;
     padding-right: 2px;
+
   }
 
     .pagination li a{
-      border: 1px solid #eaeaea;
+      border: 1px solid  black;
       border-radius: 5px;
       padding: 3px 8px;
       text-decoration: none;
       color: #4ba6c3;
+    
+    }
+a.active{
+      /* background-color: #4ba6c3; */
+       background-color:blue;
+      color:white;
     }

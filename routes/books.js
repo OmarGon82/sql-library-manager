@@ -25,6 +25,7 @@ router.get('/', handleAsync(async (req, res) => {
     let query = req.query.term
     const limit = 5;
     const startIndex = (page - 1) * limit
+
     if (!query) {
           const books = await Book.findAndCountAll({
             order: [['title', 'ASC']],
@@ -56,7 +57,7 @@ router.get('/', handleAsync(async (req, res) => {
             }
         });
         const neededPages = Math.ceil(books.count / limit)
-        res.render('books/index', { books, neededPages, query , title: 'Search Results'})
+        res.render('books/index', { books, neededPages, query, page, title: 'Search Results'})
     }
 }));
 
@@ -65,8 +66,9 @@ router.post('/', handleAsync( async (req, res) => {
     let term = req.body;
     term.term  = term.term.toLowerCase()
     const limit = 5;
+    const page = 1;
     //thie intial search wills start at page one so I can I just do (1-1) * limit
-    const startIndex = ( 1 - 1) * limit
+    const startIndex = ( page - 1) * limit
     const books = await Book.findAndCountAll({
     order: [['title', 'ASC']],
     limit: limit,
@@ -94,7 +96,7 @@ router.post('/', handleAsync( async (req, res) => {
     const neededPages = Math.ceil(books.count / limit)
     if(books.count > 0) {  
         //passing in the query from the post route so it can be used in the main GET route
-        res.render("books/index", { books, neededPages, query, title: "Search results"});
+        res.render("books/index", { books, neededPages, query, page, title: "Search results"});
     } else {
             throw error = {
                 status: 404,

@@ -6,7 +6,7 @@ const Op = Sequelize.Op;
 
 /**
  * This middleware wraps each route in a try catch block.
- * @param {callback funtion} cb 
+ * @param {callback function} cb 
  */
 function handleAsync(cb) {
     return async(req, res, next) => {
@@ -67,7 +67,7 @@ router.post('/', handleAsync( async (req, res) => {
     term.term  = term.term.toLowerCase()
     const limit = 5;
     const page = 1;
-    //thie intial search wills start at page one so I can I just do (1-1) * limit
+    //the initial search wills start at page one so I can I just do (1-1) * limit
     const startIndex = ( page - 1) * limit
     const books = await Book.findAndCountAll({
     order: [['title', 'ASC']],
@@ -134,7 +134,7 @@ router.post('/new', handleAsync(async (req, res) => {
  * in the Else block if the book exists then render it else throw 500 error
  */
 
-/* Upddate book form */
+/* Update book form */
 router.get("/:id", handleAsync(async(req, res) => {
     
     if(isNaN(parseInt(req.params.id))) {
